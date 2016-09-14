@@ -8,29 +8,14 @@ function randomBoolean() {
   return !! Math.floor(Math.random() * 2);
 }
 
-function randomHex() {
-  const values = {
-    10: 'a',
-    11: 'b',
-    12: 'c',
-    13: 'd',
-    14: 'e',
-    15: 'f',
-  };
-  const hex = Math.floor(Math.random() * 16);
-  const value = (hex > 9) ? values[hex] : hex;
-
-  return value;
-}
-
 function randomColor() {
-  const color = ['#'];
+  const color = [];
 
-  for (let i = 0; i < 6; i++) {
-    color.push(randomHex());
+  for (let i = 0; i < 3; i++) {
+    color.push(Math.floor(Math.random() * 256));
   }
 
-  return color.join('');
+  return `rgb(${color.join(',')})`;
 }
 
 function getCellState(cell) {
@@ -74,6 +59,7 @@ function setup() {
   App.colors.active = (config.colors.use) ? config.colors.active : randomColor();
   App.colors.inactive = (config.colors.use) ? config.colors.inactive : randomColor();
 
+  console.log(App.colors.inactive)
   document.body.style.background = App.colors.inactive;
 
   if (config.interval.use) {
