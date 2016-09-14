@@ -19,7 +19,7 @@ function randomColor() {
 }
 
 function getCellState(cell) {
-  return cell.dataset.active === 'true';
+  return cell.classList.contains('active');
 }
 
 function getStateByRules(position) {
@@ -47,20 +47,48 @@ function getStateByRules(position) {
   return false;
 }
 
+function createStyle() {
+  var style = document.createElement('style');
+  style.innerHTML = `
+    body {
+      background-color: ${App.colors.inactive};
+    }
+
+    .wrapper {
+      width: ${(config.margin * config.perRow) + (config.perRow * config.size)}px;
+    }
+
+    .cells-row {
+      height: ${config.size}px;
+    }
+
+    .cell {
+      width: ${config.size}px;
+      height: ${config.size}px;
+      margin-left: ${config.margin}px;
+      margin-bottom: ${config.margin}px;
+      background-color: ${App.colors.inactive};
+    }
+
+    .cell.active {
+      background-color: ${App.colors.active};
+    }
+  `;
+
+  document.body.appendChild(style);
+}
+
 function setup() {
   const wrapper = document.createElement('div');
   wrapper.classList.add('wrapper');
-  wrapper.style.width = `${(config.margin * config.perRow) + (config.perRow * config.size)}px`;
-
-  document.body.appendChild(wrapper);
 
   App.wrapper = wrapper;
-
   App.colors.active = (config.colors.use) ? config.colors.active : randomColor();
   App.colors.inactive = (config.colors.use) ? config.colors.inactive : randomColor();
 
-  console.log(App.colors.inactive)
-  document.body.style.background = App.colors.inactive;
+  createStyle();
+
+  document.body.appendChild(wrapper);
 
   if (config.interval.use) {
     setInterval(createCellsRow, config.interval.velocity);
@@ -75,7 +103,6 @@ function createCellsRow() {
   const cellsRow = document.createElement('div');
   cellsRow.classList.add('cells-row');
   cellsRow.dataset.id = App.cellsRows.length;
-  cellsRow.style.height = `${config.size}px`;
 
   App.wrapper.appendChild(cellsRow);
   App.cellsRows.push(cellsRow);
@@ -94,13 +121,9 @@ function createCells() {
 
     cell.classList.add('cell');
 
-    cell.style.width = `${config.size}px`;
-    cell.style.height = `${config.size}px`;
-    cell.style.marginLeft = `${config.margin}px`;
-    cell.style.marginBottom = `${config.margin}px`;
-    cell.style.background = (state) ? App.colors.active : App.colors.inactive;
-
-    cell.dataset.active = state;
+    if (getStateByRules(index)) {
+      cell.classList.add('active');
+    }
 
     row.appendChild(cell);
   }
