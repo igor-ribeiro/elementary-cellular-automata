@@ -1,4 +1,4 @@
-var App = {
+const App = {
   wrapper: null,
   cellsRows: [],
   colors: {},
@@ -9,7 +9,7 @@ function randomBoolean() {
 }
 
 function randomHex() {
-  var values = {
+  const values = {
     10: 'a',
     11: 'b',
     12: 'c',
@@ -17,16 +17,16 @@ function randomHex() {
     14: 'e',
     15: 'f',
   };
-  var hex = Math.floor(Math.random() * 16);
-  var value = (hex > 9) ? values[hex] : hex;
+  const hex = Math.floor(Math.random() * 16);
+  const value = (hex > 9) ? values[hex] : hex;
 
   return value;
 }
 
 function randomColor() {
-  var color = ['#'];
+  const color = ['#'];
 
-  for (var i = 0; i < 6; i++) {
+  for (let i = 0; i < 6; i++) {
     color.push(randomHex());
   }
 
@@ -42,13 +42,14 @@ function getStateByRules(position) {
     return randomBoolean();
   }
 
-  var previousRowCells = App.cellsRows[App.cellsRows.length - 2].childNodes;
-  var previousCell = previousRowCells[position];
-  var previousLeftSimbling = previousCell.previousSibling || previousRowCells[previousRowCells.length - 1];
-  var previousRightSimbling = previousCell.nextSibling || previousRowCells[0];
+  const previousRowCells = App.cellsRows[App.cellsRows.length - 2].childNodes;
+  const previousCell = previousRowCells[position];
+  const previousLeftSimbling = previousCell.previousSibling || previousRowCells[previousRowCells.length - 1];
+  const previousRightSimbling = previousCell.nextSibling || previousRowCells[0];
 
-  for (var i = 0; i < config.rules.length; i++) {
-    var rule = config.rules[i];
+  for (let i = 0; i < config.rules.length; i++) {
+    const rule = config.rules[i];
+
     if (
       getCellState(previousLeftSimbling) == rule[0] &&
       getCellState(previousCell) == rule[1] &&
@@ -57,12 +58,14 @@ function getStateByRules(position) {
       return !! rule[3];
     }
   }
+
+  return false;
 }
 
 function setup() {
-  var wrapper = document.createElement('div');
+  const wrapper = document.createElement('div');
   wrapper.classList.add('wrapper');
-  wrapper.style.width = (config.margin * config.perRow) + (config.perRow * config.size) + 'px';
+  wrapper.style.width = `${(config.margin * config.perRow) + (config.perRow * config.size)}px`;
 
   document.body.appendChild(wrapper);
 
@@ -75,17 +78,17 @@ function setup() {
   if (config.interval.use) {
     setInterval(createCellsRow, config.interval.velocity);
   } else {
-    for (var i = 0; i < config.rows; i++) {
+    for (let i = 0; i < config.rows; i++) {
       createCellsRow();
     }
   }
 }
 
 function createCellsRow() {
-  var cellsRow = document.createElement('div');
+  const cellsRow = document.createElement('div');
   cellsRow.classList.add('cells-row');
   cellsRow.dataset.id = App.cellsRows.length;
-  cellsRow.style.height = config.size + 'px';
+  cellsRow.style.height = `${config.size}px`;
 
   App.wrapper.appendChild(cellsRow);
   App.cellsRows.push(cellsRow);
@@ -94,20 +97,20 @@ function createCellsRow() {
 }
 
 function createCells() {
-  var row = App.cellsRows.length === 1
+  const row = App.cellsRows.length === 1
     ? App.cellsRows[0]
     : App.cellsRows[App.cellsRows.length - 1];
 
-  for (var index = 0; index < config.perRow; index++) {
-    var cell = document.createElement('div');
-    var state = getStateByRules(index);
+  for (let index = 0; index < config.perRow; index++) {
+    const cell = document.createElement('div');
+    const state = getStateByRules(index);
 
     cell.classList.add('cell');
 
-    cell.style.width = config.size + 'px';
-    cell.style.height = config.size + 'px';
-    cell.style.marginLeft = config.margin + 'px';
-    cell.style.marginBottom = config.margin + 'px';
+    cell.style.width = `${config.size}px`;
+    cell.style.height = `${config.size}px`;
+    cell.style.marginLeft = `${config.margin}px`;
+    cell.style.marginBottom = `${config.margin}px`;
     cell.style.background = (state) ? App.colors.active : App.colors.inactive;
 
     cell.dataset.active = state;
