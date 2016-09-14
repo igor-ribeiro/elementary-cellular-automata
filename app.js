@@ -100,14 +100,20 @@ function setup() {
 }
 
 function createCellsRow() {
-  const cellsRow = document.createElement('div');
-  cellsRow.classList.add('cells-row');
-  cellsRow.dataset.id = App.cellsRows.length;
+  let cellsRow = null;
 
+  if (! App.cellsRows.length) {
+    cellsRow = document.createElement('div');
+    cellsRow.classList.add('cells-row');
+    App.cellsRows.push(cellsRow);
+    createCells();
+  } else {
+    cellsRow = App.cellsRows[App.cellsRows.length - 1].cloneNode(true);
+    App.cellsRows.push(cellsRow);
+  }
+
+  updateCells();
   App.wrapper.appendChild(cellsRow);
-  App.cellsRows.push(cellsRow);
-
-  createCells();
 }
 
 function createCells() {
@@ -117,16 +123,23 @@ function createCells() {
 
   for (let index = 0; index < config.perRow; index++) {
     const cell = document.createElement('div');
-    const state = getStateByRules(index);
 
     cell.classList.add('cell');
 
-    if (getStateByRules(index)) {
-      cell.classList.add('active');
-    }
-
     row.appendChild(cell);
   }
+}
+
+function updateCells() {
+  const lastRow = App.cellsRows[App.cellsRows.length - 1];
+
+  [].forEach.call(lastRow.childNodes, function (cell, index) {
+    if (getStateByRules(index)) {
+      cell.classList.add('active');
+    } else {
+      cell.classList.remove('active');
+    }
+  });
 }
 
 setup();
