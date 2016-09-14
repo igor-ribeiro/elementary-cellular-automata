@@ -8,4 +8,9 @@ var config = {
   size: 4,
   margin: 0,
   rules: rules[105],
+  colors: {
+    use: false,
+    inactive: 'white',
+    active: 'black',
+  }
 };

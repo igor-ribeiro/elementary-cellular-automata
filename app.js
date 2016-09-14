@@ -70,8 +70,9 @@ function setup() {
   document.body.appendChild(wrapper);
 
   App.wrapper = wrapper;
-  App.colors.active = randomColor();
-  App.colors.inactive = randomColor();
+
+  App.colors.active = (config.colors.use) ? config.colors.active : randomColor();
+  App.colors.inactive = (config.colors.use) ? config.colors.inactive : randomColor();
 
   document.body.style.background = App.colors.inactive;
 
